@@ -3,6 +3,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
 import SignupPage from '../SignupPage/SignupPage';
 import LoginPage from '../LoginPage/LoginPage';
+import Dashboard from '../Dashboard/Dashboard';
 import userService from '../../utils/userService'
 
 
@@ -13,6 +14,7 @@ function App() {
   // this  const token = createJWT(user); // where user was the document we created from mongo
 
   function handleSignUpOrLogin(){
+    console.log('set user')
     setUser(userService.getUser()) // getting the user from localstorage decoding the jwt
   }
 
@@ -33,8 +35,8 @@ function App() {
           {userService.getUser() ? 
             <> 
              <Switch>
-                <Route exact path="/">
-                    Home PAGE COMPONENT WOULD GO HEREE
+                <Route exact path="/dashboard">
+                    <Dashboard handleLogout={handleLogout} user={user}/>
                 </Route>
             </Switch>
             </>

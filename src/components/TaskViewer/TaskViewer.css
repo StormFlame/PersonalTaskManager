@@ -1,0 +1,120 @@
+.task-viewer-task{
+    position: relative;
+    padding: 25px 0;
+    margin: 0;
+    display: block;
+    width: 100%;
+    border-bottom: 2px solid #161b22;
+}
+
+.task-viewer-task-selected{
+    border-bottom: 2px solid #96c8da;
+}
+
+#task-viewer-container-main{
+    padding: 0;
+    margin: 0;
+    overflow-y: hidden;
+    position: relative;
+    width: 100%;
+}
+
+#task-viewer-container-left{
+    background-color: #0d1117;
+    display: inline-block;
+    position: absolute;
+    overflow: scroll;
+    left: 0;
+    width: 25%;
+    height: 100vh;
+}
+
+#task-viewer-container-middle{
+    background-color: #0d1117;
+    display: inline-block;
+    width: 55%;
+    height: 100vh;
+    position: absolute;
+    right: 20%;
+}
+
+#task-viewer-container-right{
+    background-color: #0d1117;
+    display: inline-block;
+    position: absolute;
+    width: 20%;
+    right: 0;
+    height: 100vh;
+    border-left: 8px solid #0c0f15;
+}
+
+#task-viewer-middle-top-container{
+    margin: 0;
+    padding: 10px 0 0 0;
+    background-color: #0d1117;
+    height: 22vh;
+}
+
+#task-viewer-middle-center-container{
+    margin: 0;
+    padding: 15px 0;
+    background-color: #0d1117;
+    height: 60vh;
+    border-top: 2px solid #161b22;
+    border-bottom: 2px solid #161b22;
+    position: relative;
+}
+
+#task-viewer-middle-center-top-container{
+    margin: 0;
+    background-color: #0d1117;
+    height: 12vh;
+    position: relative;
+}
+
+#task-viewer-middle-center-center-container{
+    margin: 0;
+    padding: 15px 0;
+    background-color: #0d1117;
+    height: 38vh;
+    border-bottom: 2px solid #161b22;
+    position: relative;
+    overflow-y: hidden;
+    overflow: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+#task-viewer-middle-center-center-container::-webkit-scrollbar{
+    display: none;
+}
+
+#task-viewer-middle-center-bottom-container{
+    margin: 0;
+    padding: 30px 0;
+    background-color: #0d1117;
+    height: 10vh;
+    position: relative;
+}
+
+
+#task-viewer-subtask-bck-btn{
+    position: absolute;
+    top: 0;
+    left: 10px;
+    border: none;
+    color: #e6e4ee;
+    background-color: #161b22;
+    transition: .5s;
+    padding: 10px 20px;
+}
+
+#task-viewer-subtask-bck-btn:hover{
+    color: #161b22;
+    background-color: #e6e4ee;
+}
+
+#task-viewer-subtask-bck-btn:active{
+    color: #e6e4ee;
+    background-color: #161b22;
+}
