@@ -10,7 +10,6 @@ export default function TaskStats({tasks}){
     const [abandonedTasks, setAbandonedTasks] = useState([])
 
     useEffect(()=>{
-        console.log(tasks, 'TASKS STATS')
         sortTasks();
     }, [])
 

@@ -96,7 +96,7 @@ export default function TaskForm({categories, user, handleSubmitTask}){
     return(
         <>
         <div className='dashboard-medium-divider'></div>
-        <Grid centered style={{ height: '100vh'}}>
+        <Grid centered>
             <Grid.Column style={{ maxWidth: 650 }} textAlign='center'>
                 <h2 className='dashboard-txt'>Create a Task</h2>
                 <Form className='dashboard-form'  autoComplete="off"  onSubmit={handleSubmit}>

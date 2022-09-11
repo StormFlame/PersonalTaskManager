@@ -80,7 +80,6 @@ export default function Dashboard({user}){
     }
 
     async function handleUpdateTasks(newUnsortedTasks){
-        console.log(newUnsortedTasks, 'NEW UNSORTED TASKS')
         setUnsortedTasks([...newUnsortedTasks]);
         const tasksArr = await assembleTasksTree(user._id, newUnsortedTasks)
         setTasksTree([...tasksArr])

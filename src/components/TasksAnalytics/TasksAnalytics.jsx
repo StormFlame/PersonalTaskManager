@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import './TasksAnalytics.css';
 
 import { Button, Form, Grid, Segment, Header, Divider, GridColumn } from 'semantic-ui-react';
@@ -18,10 +18,9 @@ export default function TaskAnalytics({tasks, user, categories, punchCards}){
         sortTasks();
     }, [])
 
-    useEffect(()=>{
-        console.log(punchCards)
+    useLayoutEffect(()=>{
         handleGetTotalHours();
-    }, [punchCards])
+    }, [])
 
 
     function sortTasks(){
@@ -29,7 +28,6 @@ export default function TaskAnalytics({tasks, user, categories, punchCards}){
         let sortedAbandonedTasks = [];
 
         for(let i = 0; i < tasks.length; i++){
-            console.log(tasks[i].hours, 'HOURS')
             switch(tasks[i].status){
                 case 'completed':
                     sortedCompletedTasks.push(tasks[i]);
@@ -47,7 +45,8 @@ export default function TaskAnalytics({tasks, user, categories, punchCards}){
     function handleGetTotalHours(){
         let total = 0;
         for(let i = 0; i < punchCards.length; i++){
-            total += (Math.abs(punchCards[i].punchIn - punchCards[i].punchOut) / 36e5)
+            const add = (Math.abs(Number(punchCards[i].punchIn) - Number(punchCards[i].punchOut)) / 36e5);
+            total += add;
         }
 
         const rounded = (Math.round((total+Number.EPSILON)*100)/100)
@@ -83,7 +82,7 @@ export default function TaskAnalytics({tasks, user, categories, punchCards}){
 
     return(
         <>
-            <h1>Complete Tasks: {completedTasks.length}</h1>
+            <h1 className='dashboard-txt'>Complete Tasks: {completedTasks.length}</h1>
 
             {totalHours >= 1 ?
                 <p className='dashboard-txt'>Hours: {totalHours}</p>

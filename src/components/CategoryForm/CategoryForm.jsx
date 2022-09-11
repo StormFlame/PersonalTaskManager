@@ -44,7 +44,7 @@ export default function CategoyForm({handleSubmitCategory}){
     return(
         <>
         <div className='dashboard-medium-divider'></div>
-        <Grid centered style={{ height: '100vh'}} >
+        <Grid centered >
             <Grid.Column style={{ maxWidth: 650 }} textAlign='center'>
                 <h2 className='dashboard-txt'>Add a Category</h2>
                 <Form className='dashboard-form'  autoComplete="off"  onSubmit={handleSubmit}>

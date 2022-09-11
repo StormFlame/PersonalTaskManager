@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import './TaskViewer.css';
 
 import { Button, Form, Grid, Segment, Header, Divider, Icon } from 'semantic-ui-react';
@@ -23,15 +23,19 @@ export default function TaskViewer({tasks, unsorted, assembleTasksTree, user, ha
     const [subTaskHistory, setSubTaskHistory] = useState([]);
     const[punchMessage, setPunchMessage] = useState(undefined);
 
+
+    useLayoutEffect(()=>{
+        handleCalcHeight();
+    },[])
+
     useEffect(()=>{
         setUnsortedTasks([...unsorted]);
         handleSetTaskTree(tasks)
         handleCheckPunchedIn();
-        handleCalcHeight();
     }, [])
 
     function handleCalcHeight(){
-        const elHeight = document.getElementById('dashboard-header-container').offsetHeight;
+        const elHeight = document.getElementById('dashboard-header-container').getBoundingClientRect().height;
         const windHieght = window.innerHeight;
 
         setHeight(windHieght-elHeight);
@@ -100,26 +104,42 @@ export default function TaskViewer({tasks, unsorted, assembleTasksTree, user, ha
 
     function handleCheckSubTasksAllCompleted(tasks){
 
+        let isSubTasksComplete = true;
+
         if(tasks.length < 1) {
             setSubTasksComplete(true);
             return;
         }
 
-        const tasksToCheck = selectedSubTask ? tasks : tasks[0]
+        const tasksToCheck = selectedSubTask ? tasks[0] : tasks
 
         if(tasksToCheck.length){
             for(let i = 0; i<tasksToCheck.length; i++){
-                if(tasksToCheck[i].status === 'current'){
-                    setSubTasksComplete(false);
-                    return;
+
+                if(tasksToCheck[i].status === undefined){
+                    if(tasksToCheck[i][0].status === 'current'){
+                        isSubTasksComplete = false;
+                        break;
+                    }
+
+                }else{
+                    if(tasksToCheck[i].status === 'current'){
+                        isSubTasksComplete = false;
+                        break;
+                    }
                 }
             }
         }else{
-            tasksToCheck.status === 'current' && setSubTasksComplete(false)
-            return
+            if(tasksToCheck.status === 'current'){
+                isSubTasksComplete = false
+            }
         }
 
-        setSubTasksComplete(true);
+        if(isSubTasksComplete){
+            setSubTasksComplete(true);
+        }else{
+            setSubTasksComplete(false);
+        }
     }
 
     function handleSetSelectedTask(task, e){
@@ -194,6 +214,42 @@ export default function TaskViewer({tasks, unsorted, assembleTasksTree, user, ha
             setSubTaskHistory(newHistory);
             setSubTasks([...newTask[1]])
         }
+    }
+
+    async function handleRemoveSubTask(){
+
+        console.log(subTaskHistory[0], 'HISTORY')
+
+        //Remove subtask from unsorted list and set unsorted list in state
+        const newUnsortedTasks = [...unsortedTasks];
+        newUnsortedTasks.splice(newUnsortedTasks.indexOf(selectedSubTask), 1);
+        setUnsortedTasks([...newUnsortedTasks]);
+
+        //assmble the task tree from new unsorted list
+        const assembledTaskTree = await assembleTasksTree(user._id, newUnsortedTasks);
+
+        //get the selected task index so that the task can be seleceted again after the state reset
+        const selectedIndex = tasksTree.indexOf(selectedTask);
+
+        //set state in dashboard
+        handleUpdateTasks(newUnsortedTasks);
+
+        handleSetTaskTree(assembledTaskTree);
+        //use the saved selected task index to set selected task
+        setSelectedTask(assembledTaskTree[selectedIndex]);
+
+        //---------------------------------------------------------YOU NEED TO REMOVE ALL LOWER LEVEL TASKS BEFORE REMOVING CURRENT TASK
+
+        //set selected sub task to the parent sub task from history
+
+        // let newSelectedSubTask = subTaskHistory[0];
+
+        // if(subTaskHistory[1]){
+        //     newSelectedSubTask = subTaskHistory[1][0] ? subTaskHistory[1][0] : subTaskHistory[1];
+        // }
+
+        // setSelectedSubTask(newSelectedSubTask);
+
     }
 
     async function handleEditTaskStatus(status){
@@ -385,13 +441,12 @@ export default function TaskViewer({tasks, unsorted, assembleTasksTree, user, ha
                             }
                         </div>
 
-                        <Divider />
 
 
                         {subTasks.length > 0 &&
                         <>
-                            <h4 className='dashboard-txt'>Task to complete</h4>
                             <div id='task-viewer-middle-center-center-container'>
+                                <h4 className='dashboard-txt'>Task to complete</h4>
 
                                 {subTasks.map((subtask, index)=>{
                                     const subTask = subtask[0] ? subtask[0]: subtask
@@ -434,6 +489,15 @@ export default function TaskViewer({tasks, unsorted, assembleTasksTree, user, ha
                     {punchMessage && 
                         <p className='dashboard-txt'>{punchMessage}</p>
                     }
+
+                    <Divider />
+
+                    {selectedSubTask ? 
+                    <button onClick={handleRemoveSubTask}>Remove SubTask</button>
+                    :
+                    <button onClick={handleRemoveSubTask}>Remove Task</button>
+                    }
+
                 </div>
             }
         </div>
